@@ -40,7 +40,19 @@ const handleHelpToggle = (event) => {
         html.help.overlay.setAttribute('open',true)
     }
 }
-const handleAddToggle = (event) => {}
+// create an event for adding the meal click space you will be able to type your meal and the amount
+const handleAddToggle = (event) => {
+    const { target } = event;
+
+    if (target == html.other.add) {
+        html.add.overlay.showModal()
+    }
+
+    if (target == html.add.cancel) {
+        html.add.overlay.close()
+    }
+}
+
 const handleAddSubmit = (event) => {}
 const handleEditToggle = (event) => {}
 const handleEditSubmit = (event) => {}
