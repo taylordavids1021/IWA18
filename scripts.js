@@ -32,7 +32,14 @@ const handleDragOver = (event) => {
 
 const handleDragStart = (event) => {}
 const handleDragEnd = (event) => {}
-const handleHelpToggle = (event) => {}
+// click on the question mark/help button --- infor will display and close event
+const handleHelpToggle = (event) => {
+    if(html.help.overlay.hasAttribute('open')){
+        html.help.overlay.removeAttribute('open')
+    }else{
+        html.help.overlay.setAttribute('open',true)
+    }
+}
 const handleAddToggle = (event) => {}
 const handleAddSubmit = (event) => {}
 const handleEditToggle = (event) => {}
