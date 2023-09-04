@@ -1,6 +1,7 @@
 // import data.js'
 import { createOrderData } from "./data.js";
 import { updateDragging } from "./data.js";
+import { state } from "./data.js";
 
 // import view.js
 import { createOrderHtml } from "./view.js";
@@ -20,11 +21,36 @@ import { moveToColumn } from "./view.js";
  * @param {Event} event 
  */
 // drag element 
-const handleDragOver = (event) => {} 
-//   const handleDragStart = (event) => {
-    
-//   }
-//   const handleDragEnd = (event) => {}
+const handleDragOver = (event) => {
+    event.preventDefault();
+    const path = event.path || event.composedPath()
+    let column = null
+  
+    for (const element of path) {
+        const { area } = element.dataset
+        if (area) {
+            column = area
+            break;
+        }
+    }
+  
+    if (!column) return
+    updateDragging({ over: column })
+    updateDraggingHtml({ over: column })
+}
+//drag element to next coloumn
+const handleDragStart = (event) => {
+    draggedItem = event.target.closest(".order");
+    draggingElement = state.dragging.over;
+    id = draggedItem.dataset.id;
+}
+// drop element in the coloumn
+const handleDragEnd = (event) => {
+    event.preventDefault();
+    const moveTo = state.dragging.over;
+    moveToColumn(id, moveTo);
+    updateDraggingHtml({over: null});
+}
 // click on the question mark/help button --- infor will display and close event
 const handleHelpToggle = (event) => {
     if (!html.help.overlay.open) {
@@ -41,11 +67,10 @@ const handleAddToggle = (event) => {
     } else {
       html.add.overlay.close()
     }
-  
     html.add.cancel.addEventListener('click', () => {html.add.overlay.close()})
     html.add.form.reset()
 }
-// add element
+// add selement
 const handleAddSubmit = (event) => {
     event.preventDefault()
     const order = {
@@ -66,7 +91,6 @@ const handleEditToggle = (event) => {
     } else {
       html.edit.overlay.close()
     }
-  
     html.edit.cancel.addEventListener('click', html.help.overlay.close())
     if (event.target.dataset.id) {
       const editOrderTitle = document.querySelector('[data-edit-title]')
