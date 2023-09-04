@@ -52,7 +52,14 @@ const handleAddToggle = (event) => {
 const handleEditToggle = (event) => {}
 // update element order
 const handleEditSubmit = (event) => {}
-const handleDelete = (event) => {}
+// delete order
+const handleDelete = (event) => {
+    const activeElementId = document.querySelector('[data-edit-id]')
+    const actualId = activeElementId.getAttribute('data-edit-id')
+    const orderId = document.querySelector(`[data-id="${actualId}"]`)
+    orderId.remove()
+    html.edit.overlay.close()
+}
 // event listener allows function to proceed
 html.add.cancel.addEventListener('click', handleAddToggle)
 html.other.add.addEventListener('click', handleAddToggle)
