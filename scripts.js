@@ -45,13 +45,51 @@ const handleAddToggle = (event) => {
     html.add.cancel.addEventListener('click', () => {html.add.overlay.close()})
     html.add.form.reset()
 }
-// const handleAddSubmit = (event) => {
-//     event.preventDefault()
-
-// }
-const handleEditToggle = (event) => {}
+// add element
+const handleAddSubmit = (event) => {
+    event.preventDefault()
+    const order = {
+        id : null, 
+        title : document.querySelector('[data-add-title]').value,
+        table : document.querySelector('[data-add-table]').value,
+        column : document.querySelector('[data-column="ordered"]'),
+        created : null,
+    }
+    document.querySelector('[data-column="ordered"]').appendChild(createOrderHtml(createOrderData(order)))
+    html.add.overlay.close()
+    html.add.form.reset()
+}
+// edit element
+const handleEditToggle = (event) => {
+    if (!html.edit.overlay.open) {
+        html.edit.overlay.showModal()
+    } else {
+      html.edit.overlay.close()
+    }
+  
+    html.edit.cancel.addEventListener('click', html.help.overlay.close())
+    if (event.target.dataset.id) {
+      const editOrderTitle = document.querySelector('[data-edit-title]')
+      editOrderTitle.value = event.target.children[0].textContent
+      const editOrderTable = document.querySelector('[data-edit-table]')
+      editOrderTable.selectedIndex = (event.target.children[1].children[0].children[1].textContent - 1)
+      const editOrderId = document.querySelector('[data-edit-id]')
+      editOrderId.setAttribute('data-edit-id', event.target.dataset.id)
+    }
+}
 // update element order
-const handleEditSubmit = (event) => {}
+const handleEditSubmit = (event) => {
+    event.preventDefault()
+    const activeElementId = document.querySelector('[data-edit-id]')
+    const actualId = activeElementId.getAttribute('data-edit-id')
+    const activeElementSelector = document.querySelector('[data-edit-column]')
+    const actualColumn = activeElementSelector.value
+    moveToColumn(actualId,actualColumn)
+    const orderId = document.querySelector(`[data-id="${actualId}"]`)
+    orderId.children[0].textContent = document.querySelector('[data-edit-title]').value
+    orderId.children[1].children[0].children[1].textContent = document.querySelector('[data-edit-table]').value
+    html.edit.overlay.close()
+}
 // delete order
 const handleDelete = (event) => {
     const activeElementId = document.querySelector('[data-edit-id]')
