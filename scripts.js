@@ -1,5 +1,16 @@
-// import html dat from view.js
-import {html} from './view.js'
+// import data.js'
+import { TABLES } from "./data.js";
+import { COLUMNS } from "./data.js";
+import { state } from "./data.js";
+import { createOrderData } from "./data.js";
+import { updateDragging } from "./data.js";
+
+// import view.js
+import { createOrderHtml } from "./view.js";
+import { html } from "./view.js";
+import { updateDraggingHtml } from "./view.js";
+import { moveToColumn } from "./view.js";
+
 /**
  * A handler that fires when a user drags over any element inside a column. In
  * order to determine which column the user is dragging over the entire event
@@ -11,6 +22,7 @@ import {html} from './view.js'
  *
  * @param {Event} event 
  */
+
 const handleDragOver = (event) => {
     event.preventDefault();
     const path = event.path || event.composedPath()
@@ -30,15 +42,16 @@ const handleDragOver = (event) => {
 }
 
 
-const handleDragStart = (event) => {}
+const handleDragStart = (event) => {
+    event.preventDefault()
+}
 const handleDragEnd = (event) => {}
 // click on the question mark/help button --- infor will display and close event
 const handleHelpToggle = (event) => {
-    if(html.help.overlay.hasAttribute('open')){
-        html.help.overlay.removeAttribute('open')
-    }else{
-        html.help.overlay.setAttribute('open',true)
-    }
+    html.help.overlay.showModal()
+    html.help.cancel.addEventListener('click', () => {
+        html.help.overlay.close()
+    })
 }
 // create an event for adding the meal click space you will be able to type your meal and the amount
 const handleAddToggle = (event) => {
@@ -53,10 +66,59 @@ const handleAddToggle = (event) => {
     }
 }
 
-const handleAddSubmit = (event) => {}
-const handleEditToggle = (event) => {}
-const handleEditSubmit = (event) => {}
-const handleDelete = (event) => {}
+const handleAddSubmit = (event) => {
+    event.preventDefault()
+    let title = html.add.title.value
+   let table = html.add.table.value   
+   
+      const order = {
+        id:createUniqueId(),
+        title, 
+        table,
+        created:new Date()
+      }
+
+    html.other.grid.children[0].appendChild(createOrderHtml(order))
+    html.add.overlay.close()
+    html.add.title.value=''
+}
+const handleEditToggle = (event) => {
+    const { target } = event;
+
+    const editOpen = document.querySelector('.order')
+
+    if (target == editOpen) {
+        html.edit.overlay.showModal()
+    }
+
+    if (target == html.edit.cancel) {
+        html.edit.overlay.close()
+    }
+}
+const handleEditSubmit = (event) => {
+    event.preventDefault();
+    const order = document.querySelector('.order')
+    order.remove()
+    const data = {
+        title: html.edit.title.value,
+        table: html.edit.table.value,
+        column: html.edit.column.value,
+    }
+    const orderData = createOrderData(data)
+    const orderHtml = createOrderHtml(orderData)
+    const columns = document.querySelector(`[data-column="${data.column}"]`)
+    columns.appendChild(orderHtml)
+    html.edit.overlay.close()
+}
+const handleDelete = (event) => {
+    const { target } = event
+
+    if (target == html.edit.delete) {
+        document.querySelector('.order').remove()
+    }
+
+    html.edit.overlay.close()
+}
 
 html.add.cancel.addEventListener('click', handleAddToggle)
 html.other.add.addEventListener('click', handleAddToggle)
