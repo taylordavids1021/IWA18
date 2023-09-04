@@ -1,7 +1,4 @@
 // import data.js'
-import { TABLES } from "./data.js";
-import { COLUMNS } from "./data.js";
-import { state } from "./data.js";
 import { createOrderData } from "./data.js";
 import { updateDragging } from "./data.js";
 
@@ -22,104 +19,41 @@ import { moveToColumn } from "./view.js";
  *
  * @param {Event} event 
  */
-
-const handleDragOver = (event) => {
-    event.preventDefault();
-    const path = event.path || event.composedPath()
-    let column = null
-
-    for (const element of path) {
-        const { area } = element.dataset
-        if (area) {
-            column = area
-            break;
-        }
-    }
-
-    if (!column) return
-    updateDragging({ over: column })
-    updateDraggingHtml({ over: column })
-}
-
-
-const handleDragStart = (event) => {
-    event.preventDefault()
-}
-const handleDragEnd = (event) => {}
+// drag element 
+const handleDragOver = (event) => {} 
+//   const handleDragStart = (event) => {
+    
+//   }
+//   const handleDragEnd = (event) => {}
 // click on the question mark/help button --- infor will display and close event
 const handleHelpToggle = (event) => {
-    html.help.overlay.showModal()
-    html.help.cancel.addEventListener('click', () => {
+    if (!html.help.overlay.open) {
+        html.help.overlay.showModal()
+    } else {
         html.help.overlay.close()
-    })
+    }
+    html.help.cancel.addEventListener('click', () => {html.help.overlay.close()})
 }
-// create an event for adding the meal click space you will be able to type your meal and the amount
+// add element
 const handleAddToggle = (event) => {
-    const { target } = event;
-
-    if (target == html.other.add) {
+    if (!html.add.overlay.open) {
         html.add.overlay.showModal()
+    } else {
+      html.add.overlay.close()
     }
-
-    if (target == html.add.cancel) {
-        html.add.overlay.close()
-    }
+  
+    html.add.cancel.addEventListener('click', () => {html.add.overlay.close()})
+    html.add.form.reset()
 }
+// const handleAddSubmit = (event) => {
+//     event.preventDefault()
 
-const handleAddSubmit = (event) => {
-    event.preventDefault()
-    let title = html.add.title.value
-   let table = html.add.table.value   
-   
-      const order = {
-        id:createUniqueId(),
-        title, 
-        table,
-        created:new Date()
-      }
-
-    html.other.grid.children[0].appendChild(createOrderHtml(order))
-    html.add.overlay.close()
-    html.add.title.value=''
-}
-const handleEditToggle = (event) => {
-    const { target } = event;
-
-    const editOpen = document.querySelector('.order')
-
-    if (target == editOpen) {
-        html.edit.overlay.showModal()
-    }
-
-    if (target == html.edit.cancel) {
-        html.edit.overlay.close()
-    }
-}
-const handleEditSubmit = (event) => {
-    event.preventDefault();
-    const order = document.querySelector('.order')
-    order.remove()
-    const data = {
-        title: html.edit.title.value,
-        table: html.edit.table.value,
-        column: html.edit.column.value,
-    }
-    const orderData = createOrderData(data)
-    const orderHtml = createOrderHtml(orderData)
-    const columns = document.querySelector(`[data-column="${data.column}"]`)
-    columns.appendChild(orderHtml)
-    html.edit.overlay.close()
-}
-const handleDelete = (event) => {
-    const { target } = event
-
-    if (target == html.edit.delete) {
-        document.querySelector('.order').remove()
-    }
-
-    html.edit.overlay.close()
-}
-
+// }
+const handleEditToggle = (event) => {}
+// update element order
+const handleEditSubmit = (event) => {}
+const handleDelete = (event) => {}
+// event listener allows function to proceed
 html.add.cancel.addEventListener('click', handleAddToggle)
 html.other.add.addEventListener('click', handleAddToggle)
 html.add.form.addEventListener('submit', handleAddSubmit)
