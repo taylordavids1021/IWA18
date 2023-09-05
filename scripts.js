@@ -22,7 +22,15 @@ import { moveToColumn } from "./view.js";
  */
 // drag element 
 const handleDragOver = (event) => {
+    /** 
+     * The preventDefault() method of the Event interface tells the user agent that if the event 
+     * does not get explicitly handled, its default action should not be taken as it normally would be.
+     */
     event.preventDefault();
+    /**
+     * The composedPath() method of the Event interface returns the event's path which is an array 
+     * of the objects on which listeners will be invoked.
+     */
     const path = event.path || event.composedPath()
     let column = null
   
